@@ -14,6 +14,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
     RequestQueue queue;
     @Override
@@ -30,14 +33,23 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://api.openweathermap.org/data/2.5/weather?q=tampere&units=metric&appid=6c433438776b5be4ac86001dc88de74d";
         // Make the request and put it in the queue to get the response
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                (Response.Listener<String>) response -> {
+                response -> {
                     //The response is here as a string
                     Log.d("WEATHER_APP", response);
-                }, (Response.ErrorListener) error -> {
+                    parseJsonAndUpdateUI(response);
+                }, error -> {
                     //Error (timeout, other errors)
                     Log.d("WEATHER_APP", error.toString());
                 });
         //ADd the request to queue
         queue.add(stringRequest);
+    }
+
+    private void parseJsonAndUpdateUI(String response) {
+        try {
+            JSONObject weatherResponse = new JSONObject(response)
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
