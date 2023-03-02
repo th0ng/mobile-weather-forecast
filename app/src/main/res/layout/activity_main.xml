@@ -30,8 +30,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/windTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cityTextView"
-        app:layout_constraintVertical_bias="1.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/sunny"
+        tools:srcCompat="@drawable/sunny" />
 
     <TextView
         android:id="@+id/temperatureTextView"

@@ -63,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
             descriptionTextView.setText(description);
 
             TextView temperatureTextView = findViewById(R.id.temperatureTextView);
-            temperatureTextView.setText((int) temperature);
+            temperatureTextView.setText("" + temperature +" C");
 
             TextView windTextView = findViewById(R.id.windTextView);
-            windTextView.setText((int) windSpeed);
+            windTextView.setText("" + windSpeed + " m/s");
 
         } catch (JSONException e) {
             e.printStackTrace();
