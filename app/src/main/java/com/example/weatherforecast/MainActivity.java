@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,13 +42,32 @@ public class MainActivity extends AppCompatActivity {
                     //Error (timeout, other errors)
                     Log.d("WEATHER_APP", error.toString());
                 });
-        //ADd the request to queue
+        //Add the request to queue
         queue.add(stringRequest);
     }
 
     private void parseJsonAndUpdateUI(String response) {
         try {
-            JSONObject weatherResponse = new JSONObject(response)
+            JSONObject weatherResponse = new JSONObject(response);
+            String description;
+            double temperature;
+            double windSpeed;
+
+            description = weatherResponse.getJSONArray("weather").getJSONObject(0).getString("description");
+            temperature = weatherResponse.getJSONObject("main").getDouble("temp");
+            windSpeed = weatherResponse.getJSONObject("wind").getDouble("speed");
+
+
+            //write the value on the UI
+            TextView descriptionTextView = findViewById(R.id.descriptionTextView);
+            descriptionTextView.setText(description);
+
+            TextView temperatureTextView = findViewById(R.id.temperatureTextView);
+            temperatureTextView.setText((int) temperature);
+
+            TextView windTextView = findViewById(R.id.windTextView);
+            windTextView.setText((int) windSpeed);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
