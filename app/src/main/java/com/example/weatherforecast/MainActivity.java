@@ -1,5 +1,6 @@
 package com.example.weatherforecast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DownloadManager;
@@ -19,7 +20,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-    RequestQueue queue;
+    private RequestQueue queue;
+    private int mCounter = 0;
+    private String description = "Click refresh button to get the weather data";
+    private double temperature = 0;
+    private double windSpeed = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +32,50 @@ public class MainActivity extends AppCompatActivity {
 
         //Create a new web request queue
         queue = Volley.newRequestQueue(this);
+
+        //write the value on the UI
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+
+    //This is an automatic callback from the system
+    //You can save your UI state here: description, temperature and wind
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("WEATHER_DESCRIPTION", description);
+        outState.putDouble("TEMPERATURE", temperature);
+        outState.putDouble("WIND_SPEED", windSpeed);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        //check if there's a bundle and activity ui saved
+        //if so read the value from there
+
+        if (savedInstanceState != null) {
+            description = savedInstanceState.getString("WEATHER_DESCRIPTION");
+            if (description == null) {
+                description = "Click refresh button to get the weather data";
+            }
+            temperature = savedInstanceState.getDouble("TEMPERATURE", 0);
+            windSpeed = savedInstanceState.getDouble("WIND_SPEED", 0 );
+        }
+
+        TextView descriptionTextView = findViewById(R.id.descriptionTextView);
+        descriptionTextView.setText(description);
+
+        TextView temperatureTextView = findViewById(R.id.temperatureTextView);
+        temperatureTextView.setText("" + temperature +" C");
+
+        TextView windTextView = findViewById(R.id.windTextView);
+        windTextView.setText("" + windSpeed + " m/s");
     }
 
     public void fetchWeatherData(View view) {
@@ -49,16 +98,11 @@ public class MainActivity extends AppCompatActivity {
     private void parseJsonAndUpdateUI(String response) {
         try {
             JSONObject weatherResponse = new JSONObject(response);
-            String description;
-            double temperature;
-            double windSpeed;
 
             description = weatherResponse.getJSONArray("weather").getJSONObject(0).getString("description");
             temperature = weatherResponse.getJSONObject("main").getDouble("temp");
             windSpeed = weatherResponse.getJSONObject("wind").getDouble("speed");
 
-
-            //write the value on the UI
             TextView descriptionTextView = findViewById(R.id.descriptionTextView);
             descriptionTextView.setText(description);
 
